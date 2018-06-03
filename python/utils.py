@@ -12,7 +12,8 @@ class webFetcher:
         self.validRoutes = []
         self.stops = {}
         self.result = {}
-        assert "USC Buses" in self.driver.title
+        if not "USC Buses" in self.driver.title:
+            raise Exception("webpage load failed: %s", self.driver.title)
         time.sleep(2)
         logging.debug("webpage loaded successfully")
 
