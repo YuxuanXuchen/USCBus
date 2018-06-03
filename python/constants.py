@@ -1,2 +1,2 @@
 uscBusesUrl = 'https://www.uscbuses.com/arrivals'
-webFetcherLogFile = "'webfetcher.log'"
+webFetcherLogFile = "webfetcher.log"
