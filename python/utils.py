@@ -58,7 +58,7 @@ class webFetcher:
                         arrivingVehicle = self.driver.find_element_by_class_name("arriving_vehicle").text
                         arrivalBus = arrivingVehicle.split(" @ ")[0]
                         arrivalTime = arrivingVehicle.split(" @ ")[1]
-                        dict = {'stop': stopName, 'due': dueIn, "busNum": arrivalBus, "arrivalTime": arrivalTime}
+                        dict = {'stop': stopName, 'due': dueIn, "busNum": arrivalBus, "arrivalTime": arrivalTime, "updateTime": updateTime}
                     except:
                         dict = {'stop':stopName, 'prediction': "None", "updateTime": updateTime}
                     resultEachRoute.append(dict)
