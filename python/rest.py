@@ -24,17 +24,16 @@ def getData():
     w = utils.webFetcher()
     while 1:
         try:
-            w.getWebpage()
-            w.getRoutes()
-            w.getStops()
+            w.run()
             lock.acquire()
             result = w.jsonResult()
-            lock.release()
         except Exception as e:
             print("Error: " + str(e))
             w.cleanUp()
             time.sleep(1)
             w = utils.webFetcher()
+        finally:
+            lock.release()
     w.cleanup()
 
 if __name__ == '__main__':

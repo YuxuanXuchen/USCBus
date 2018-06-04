@@ -6,6 +6,7 @@ import time
 import json
 from pyvirtualdisplay import Display
 from sys import platform
+from selenium.webdriver.support.ui import Select
 
 class webFetcher:
     def __init__(self):
@@ -14,7 +15,7 @@ class webFetcher:
             self.display.start()
             self.driver = webdriver.Firefox()
         elif platform == "darwin":
-            self.driver = webdriver.Chrome()
+            self.driver = webdriver.Firefox()
         logging.basicConfig(filename=constants.webFetcherLogFile, level=logging.DEBUG)
         self.validRoutes = []
         self.stops = {}
@@ -24,9 +25,7 @@ class webFetcher:
         self.driver.get(constants.uscBusesUrl)
         if not "USC Buses" in self.driver.title:
             raise Exception("webpage load failed: %s", self.driver.title)
-        self.validRoutes = []
-        self.stops = {}
-        self.result = {}
+        self.cleanData()
         time.sleep(2)
         logging.debug("webpage loaded successfully")
 
@@ -34,10 +33,6 @@ class webFetcher:
         self.validRoutes = []
         self.stops = {}
         self.result = {}
-
-    def refreshPage(self):
-        self.driver.refresh()
-        time.sleep(2)
 
     def getRoutes(self):
         routes = self.driver.find_elements_by_xpath('//*[@id="routeSelect"]/*')
@@ -48,16 +43,16 @@ class webFetcher:
 
     def getStops(self):
         for eachRoute in self.validRoutes:
-            xpath = "//*[@id='routeSelect']/option[text()='%s']" % eachRoute
-            self.driver.find_element_by_xpath(xpath).click()
+            routeSelect = Select(self.driver.find_element_by_id('routeSelect'))
+            routeSelect.select_by_visible_text(eachRoute)
             time.sleep(1)
             stops = self.driver.find_elements_by_xpath('//*[@id="stopSelect"]/*')
             resultEachRoute = []
             for elem in stops:
                 if not elem.get_attribute('value') == '0':
                     stopName = elem.text
-                    xpath_stop = "//*[@id='stopSelect']/option[text()='%s']" % stopName
-                    self.driver.find_element_by_xpath(xpath_stop).click()
+                    stopSelect = Select(self.driver.find_element_by_id('stopSelect'))
+                    stopSelect.select_by_visible_text(stopName)
                     time.sleep(0.6)
                     prediction = self.driver.find_element_by_xpath('//*[@id="predictions_area"]').text
                     updateTime = self.driver.find_element_by_xpath('//*[@id="arrivals_time"]').text
@@ -73,14 +68,16 @@ class webFetcher:
         if platform == "linux" or platform == "linux2":
             self.display.stop()
 
-    def printJsonResult(self):
-        print json.dumps(self.result, indent=4, sort_keys=True)
+    def formatJsonResult(self):
+        return json.dumps(self.result, indent=4, sort_keys=True)
 
+    def run(self):
+        self.getWebpage()
+        self.getRoutes()
+        self.getStops()
 
 if __name__ == '__main__':
     w = webFetcher()
-    w.getWebpage()
-    w.getRoutes()
-    w.getStops()
-    w.printJsonResult()
+    w.run()
+    print w.formatJsonResult()
     w.cleanUp()
