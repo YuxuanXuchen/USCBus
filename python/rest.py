@@ -20,16 +20,15 @@ def runRest():
 
 def getData():
     w = utils.webFetcher()
-    w.getWebpage()
     while 1:
         try:
+            w.getWebpage()
             w.getRoutes()
             w.getStops()
             global result
             lock.acquire()
             result = w.jsonResult()
             lock.release()
-            w.refreshPage()
         except Exception as e:
             print("Error: " + str(e))
     w.cleanup()
