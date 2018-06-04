@@ -4,11 +4,14 @@ import constants
 import logging
 import time
 import json
+from pyvirtualdisplay import Display
 from sys import platform
 
 class webFetcher:
     def __init__(self):
         if platform == "linux" or platform == "linux2":
+            self.display = Display(visible=0, size=(800, 600))
+            self.display.start()
             self.driver = webdriver.Firefox()
         elif platform == "darwin":
             self.driver = webdriver.Chrome()
@@ -59,6 +62,8 @@ class webFetcher:
 
     def cleanUp(self):
         self.driver.close()
+        if platform == "linux" or platform == "linux2":
+            self.display.stop()
 
     def printJsonResult(self):
         print json.dumps(self.result, indent=4, sort_keys=True)
