@@ -16,10 +16,7 @@ def index():
     return ret
 
 def runRest():
-    if platform == "linux" or platform == "linux2":
-        app.run(host='0.0.0.0', port=80)
-    elif platform == "darwin":
-        app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080)
 
 def getData():
     w = utils.webFetcher()
