@@ -16,7 +16,7 @@ def index():
     return ret
 
 def runRest():
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8888)
 
 def getData():
     w = utils.webFetcher()
