@@ -2,6 +2,7 @@
 from flask import Flask
 import utils
 import threading
+import time
 from sys import platform
 
 app = Flask(__name__)
@@ -19,18 +20,21 @@ def runRest():
     app.run(host='0.0.0.0', port=8888)
 
 def getData():
+    global result
     w = utils.webFetcher()
     while 1:
         try:
             w.getWebpage()
             w.getRoutes()
             w.getStops()
-            global result
             lock.acquire()
             result = w.jsonResult()
             lock.release()
         except Exception as e:
             print("Error: " + str(e))
+            w.cleanUp()
+            time.sleep(1)
+            w = utils.webFetcher()
     w.cleanup()
 
 if __name__ == '__main__':
