@@ -3,23 +3,32 @@ import constants
 import logging
 import time
 import json
+from sys import platform
 
 class webFetcher:
     def __init__(self):
-        self.driver = webdriver.Chrome()
-        logging.basicConfig(filename= constants.webFetcherLogFile, level=logging.DEBUG)
-        self.driver.get(constants.uscBusesUrl)
+        if platform == "linux" or platform == "linux2":
+            self.driver = webdriver.Firefox()
+        elif platform == "darwin":
+            self.driver = webdriver.Chrome()
+        logging.basicConfig(filename=constants.webFetcherLogFile, level=logging.DEBUG)
         self.validRoutes = []
         self.stops = {}
         self.result = {}
+
+    def getWebpage(self):
+        self.driver.get(constants.uscBusesUrl)
         if not "USC Buses" in self.driver.title:
             raise Exception("webpage load failed: %s", self.driver.title)
         time.sleep(2)
         logging.debug("webpage loaded successfully")
 
+    def refreshPage(self):
+        self.driver.refresh()
+        time.sleep(2)
+
     def getRoutes(self):
         routes = self.driver.find_elements_by_xpath('//*[@id="routeSelect"]/*')
-        #time.sleep(1)
         for elem in routes:
             if not elem.get_attribute('value') == '0' and \
                     not elem.get_attribute('class') == "route_arrival_menu_item_disable":
@@ -42,7 +51,6 @@ class webFetcher:
                     updateTime = self.driver.find_element_by_xpath('//*[@id="arrivals_time"]').text
                     dict = {'stop':stopName, 'prediction': prediction, "updateTime": updateTime}
                     resultEachRoute.append(dict)
-                    # print elem.text
             self.result[eachRoute] = resultEachRoute
 
     def jsonResult(self):
@@ -57,6 +65,7 @@ class webFetcher:
 
 if __name__ == '__main__':
     w = webFetcher()
+    w.getWebpage()
     w.getRoutes()
     w.getStops()
     w.printJsonResult()
