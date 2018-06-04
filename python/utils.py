@@ -24,6 +24,9 @@ class webFetcher:
         self.driver.get(constants.uscBusesUrl)
         if not "USC Buses" in self.driver.title:
             raise Exception("webpage load failed: %s", self.driver.title)
+        self.validRoutes = []
+        self.stops = {}
+        self.result = {}
         time.sleep(2)
         logging.debug("webpage loaded successfully")
 
