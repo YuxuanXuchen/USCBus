@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 from selenium import webdriver
 import constants
 import logging
