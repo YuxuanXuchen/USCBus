@@ -1,9 +1,6 @@
 #!/usr/bin/python2.7
 from flask import Flask
-import utils
-import threading
-import time
-from sys import platform
+import utils, threading, time, sys, signal, os
 
 app = Flask(__name__)
 lock = threading.Lock()
@@ -27,17 +24,26 @@ def getData():
             w.run()
             lock.acquire()
             result = w.jsonResult()
+            lock.release()
         except Exception as e:
             print("Error: " + str(e))
-            w.cleanUp()
+            try:
+                w.cleanUp()
+            except:
+                pass
             time.sleep(1)
             w = utils.webFetcher()
-        finally:
-            lock.release()
     w.cleanup()
 
 if __name__ == '__main__':
     thread1 = threading.Thread(target=runRest)
     thread2 = threading.Thread(target=getData)
+    def signal_handler(signal, frame):
+        print('\nKilling the server')
+        os.kill(os.getpid(), 9)
+        sys.exit(0)
+    signal.signal(signal.SIGINT, signal_handler)
     thread1.start()
     thread2.start()
+    while 1:
+        time.sleep(0.5)

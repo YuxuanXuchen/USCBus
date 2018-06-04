@@ -13,9 +13,7 @@ class webFetcher:
         if platform == "linux" or platform == "linux2":
             self.display = Display(visible=0, size=(800, 600))
             self.display.start()
-            self.driver = webdriver.Firefox()
-        elif platform == "darwin":
-            self.driver = webdriver.Firefox()
+        self.driver = webdriver.Firefox()
         logging.basicConfig(filename=constants.webFetcherLogFile, level=logging.DEBUG)
         self.validRoutes = []
         self.stops = {}
@@ -54,9 +52,15 @@ class webFetcher:
                     stopSelect = Select(self.driver.find_element_by_id('stopSelect'))
                     stopSelect.select_by_visible_text(stopName)
                     time.sleep(0.6)
-                    prediction = self.driver.find_element_by_xpath('//*[@id="predictions_area"]').text
                     updateTime = self.driver.find_element_by_xpath('//*[@id="arrivals_time"]').text
-                    dict = {'stop':stopName, 'prediction': prediction, "updateTime": updateTime}
+                    try:
+                        dueIn = self.driver.find_element_by_xpath('//*[@id="predictions_area"]/span[1]').text.strip()
+                        arrivingVehicle = self.driver.find_element_by_class_name("arriving_vehicle").text
+                        arrivalBus = arrivingVehicle.split(" @ ")[0]
+                        arrivalTime = arrivingVehicle.split(" @ ")[1]
+                        dict = {'stop': stopName, 'due': dueIn, "busNum": arrivalBus, "arrivalTime": arrivalTime}
+                    except:
+                        dict = {'stop':stopName, 'prediction': "None", "updateTime": updateTime}
                     resultEachRoute.append(dict)
             self.result[eachRoute] = resultEachRoute
 
