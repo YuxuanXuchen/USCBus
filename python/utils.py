@@ -30,6 +30,11 @@ class webFetcher:
         time.sleep(2)
         logging.debug("webpage loaded successfully")
 
+    def cleanData(self):
+        self.validRoutes = []
+        self.stops = {}
+        self.result = {}
+
     def refreshPage(self):
         self.driver.refresh()
         time.sleep(2)
