@@ -21,10 +21,10 @@ class webFetcher:
 
     def getWebpage(self):
         self.driver.get(constants.uscBusesUrl)
-        if not "USC Buses" in self.driver.title:
-            raise Exception("webpage load failed: %s", self.driver.title)
         self.cleanData()
         time.sleep(2)
+        if not "USC Buses" in self.driver.title:
+            raise Exception("webpage load failed: %s", self.driver.title)
         logging.debug("webpage loaded successfully")
 
     def cleanData(self):
@@ -52,7 +52,7 @@ class webFetcher:
                     stopName = elem.text
                     stopSelect = Select(self.driver.find_element_by_id('stopSelect'))
                     stopSelect.select_by_visible_text(stopName)
-                    time.sleep(0.6)
+                    time.sleep(0.8)
                     updateTime = self.driver.find_element_by_xpath('//*[@id="arrivals_time"]').text
                     try:
                         dueIn = self.driver.find_element_by_xpath('//*[@id="predictions_area"]/span[1]').text.strip()

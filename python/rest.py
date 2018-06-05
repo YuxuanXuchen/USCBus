@@ -38,6 +38,7 @@ def getData():
 if __name__ == '__main__':
     thread1 = threading.Thread(target=runRest)
     thread2 = threading.Thread(target=getData)
+    thread3 = threading.Thread(target=getData)
     def signal_handler(signal, frame):
         print('\nKilling the server')
         os.kill(os.getpid(), 9)
@@ -45,5 +46,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     thread1.start()
     thread2.start()
+    time.sleep(10)
+    thread3.start()
     while 1:
         time.sleep(0.5)
