@@ -37,10 +37,11 @@ class webFetcher:
         for elem in routes:
             if not elem.get_attribute('value') == '0' and \
                     not elem.get_attribute('class') == "route_arrival_menu_item_disable":
-                self.validRoutes.append(elem.text)
+                self.validRoutes.append([elem.text, elem.get_attribute("value")])
 
     def getStops(self):
-        for eachRoute in self.validRoutes:
+        for routePair in self.validRoutes:
+            eachRoute = routePair[0]
             routeSelect = Select(self.driver.find_element_by_id('routeSelect'))
             routeSelect.select_by_visible_text(eachRoute)
             time.sleep(1)
@@ -62,7 +63,7 @@ class webFetcher:
                     except:
                         dict = {'stop':stopName, 'prediction': "None", "updateTime": updateTime}
                     resultEachRoute.append(dict)
-            self.result[eachRoute] = resultEachRoute
+            self.result[eachRoute + "%" + routePair[1]] = resultEachRoute
 
     def jsonResult(self):
         return json.dumps(self.result)
