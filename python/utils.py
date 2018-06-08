@@ -1,7 +1,6 @@
 #!/usr/bin/python2.7
 from selenium import webdriver
 import constants
-import logging
 import time
 import json
 from pyvirtualdisplay import Display
@@ -14,7 +13,6 @@ class webFetcher:
             self.display = Display(visible=0, size=(800, 600))
             self.display.start()
         self.driver = webdriver.Firefox()
-        logging.basicConfig(filename=constants.webFetcherLogFile, level=logging.DEBUG)
         self.validRoutes = []
         self.stops = {}
         self.result = {}
@@ -25,7 +23,6 @@ class webFetcher:
         time.sleep(2)
         if not "USC Buses" in self.driver.title:
             raise Exception("webpage load failed: %s", self.driver.title)
-        logging.debug("webpage loaded successfully")
 
     def cleanData(self):
         self.validRoutes = []
