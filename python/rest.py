@@ -1,10 +1,19 @@
 #!/usr/bin/python2.7
 from flask import Flask
 import utils, threading, time, sys, signal, os
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 lock = threading.Lock()
 result = ""
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.INFO)
+log_handler = RotatingFileHandler("app.log", mode='a', maxBytes=5*1024*1024,
+                                 backupCount=2, encoding=None, delay=0)
+log_handler.setLevel(logging.INFO)
+log.addHandler(log_handler)
 
 @app.route('/')
 def index():

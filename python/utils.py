@@ -6,6 +6,10 @@ import json
 from pyvirtualdisplay import Display
 from sys import platform
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.remote.remote_connection import LOGGER
+import logging
+
+LOGGER.setLevel(logging.ERROR)
 
 class webFetcher:
     def __init__(self):
