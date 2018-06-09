@@ -34,6 +34,7 @@ def getData():
             lock.acquire()
             result = w.jsonResult()
             lock.release()
+            w.close()
         except Exception as e:
             print("Error: " + str(e))
             try:
