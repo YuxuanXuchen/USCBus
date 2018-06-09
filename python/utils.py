@@ -16,12 +16,12 @@ class webFetcher:
         if platform == "linux" or platform == "linux2":
             self.display = Display(visible=0, size=(800, 600))
             self.display.start()
-        self.driver = webdriver.Firefox()
         self.validRoutes = []
         self.stops = {}
         self.result = {}
 
     def getWebpage(self):
+        self.driver = webdriver.Firefox()
         self.driver.get(constants.uscBusesUrl)
         self.cleanData()
         time.sleep(2)
@@ -32,6 +32,9 @@ class webFetcher:
         self.validRoutes = []
         self.stops = {}
         self.result = {}
+
+    def close(self):
+        self.driver.close()
 
     def getRoutes(self):
         routes = self.driver.find_elements_by_xpath('//*[@id="routeSelect"]/*')
