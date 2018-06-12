@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 from flask import Flask
-import utils, beautifulSoup, threading, time, sys, signal, os
+import utils, beautifulSoup, threading, time, sys, signal, os, time
 import logging
 from logging.handlers import RotatingFileHandler
 from sys import platform
@@ -64,7 +64,7 @@ def getDataBS4():
 if __name__ == '__main__':
     thread1 = threading.Thread(target=runRest)
     thread2 = threading.Thread(target=getDataBS4)
-    # thread3 = threading.Thread(target=getData)
+    thread3 = threading.Thread(target=getDataBS4)
     def signal_handler(signal, frame):
         print('\nKilling the server')
         os.kill(os.getpid(), 9)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     thread1.start()
     thread2.start()
-    # time.sleep(10)
-    # thread3.start()
+    time.sleep(5)
+    thread3.start()
     while 1:
         time.sleep(0.5)
