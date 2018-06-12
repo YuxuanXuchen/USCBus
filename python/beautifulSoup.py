@@ -57,9 +57,14 @@ class beautifulSoupFetcher:
 
     def processData(self, s):
         try:
-            busNum = re.search('Bus (.+?) arrive', s).group(1)
-            due = re.search('in (\d+?) minute', s).group(1)
-            arriveTime = re.search('at (.+?)\.', s).group(1)
+            if "is currently arriving." in s:
+                busNum = re.search('Bus (.+?) is currently arriving', s).group(1)
+                due = '0'
+                arriveTime = ""
+            else:
+                busNum = re.search('Bus (.+?) arrive', s).group(1)
+                due = re.search('in (\d+?) minute', s).group(1)
+                arriveTime = re.search('at (.+?)\.', s).group(1)
             return {"busNum": busNum, "due": due, "arriveTime": arriveTime}
         except Exception as e:
             return None
