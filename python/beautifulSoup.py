@@ -52,7 +52,7 @@ class beautifulSoupFetcher:
                             eachStopTimeResult.append(dict)
                 eachStopResult["time"] = eachStopTimeResult
                 eachRouteResult.append(eachStopResult)
-            self.result.append({"routeId": routeId, "routeName": eachStop[0], "routeTime": eachRouteResult})
+            self.result.append({"routeId": routeId, "routeName": eachRouteData[0], "routeTime": eachRouteResult})
 
 
     def processData(self, s):
