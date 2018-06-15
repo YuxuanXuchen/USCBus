@@ -24,6 +24,21 @@ def index():
     lock.release()
     return ret
 
+@app.route('/about')
+def about():
+    about_string = """
+The developers and maintainers of the USC Bus mobile app are not affiliated with the University of Southern California.\r\n
+
+Privacy policy of the USC Bus app can be found at uscbus.com/usc-bus-app-privacy-policy/.\r\n
+
+Please send feedback and suggestions to yuxuanchen1995@gmail.com\r\n
+
+We also welcome help to build the iOS version of the app.\r\n
+
+Yuxuan Chen\r\n
+    """
+    return about_string
+
 def runRest():
     app.run(host='0.0.0.0', port=8888)
 
